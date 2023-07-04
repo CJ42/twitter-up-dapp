@@ -1,0 +1,19 @@
+data: {
+    protected: false,
+    location: 'London, England',
+    username: 'JeanCavallera',
+    description: 'Smart Contract Engineer at @lukso_io 🆙 | Author of “All About Solidity” articles series 📝📚⛓',
+    public_metrics: {
+      followers_count: 1358,
+      following_count: 560,
+      tweet_count: 637,
+      listed_count: 25
+    },
+    profile_image_url: 'https://pbs.twimg.com/profile_images/1628818297041960961/y09nez7F_normal.jpg',
+    verified: false,
+    created_at: '2015-07-19T08:40:56.000Z',
+    name: 'Jean Cavallera - CJ42',
+    id: '3382868896',
+    entities: { url: [Object], description: [Object] },
+    url: 'https://t.co/4W1qQCrXNm'
+  }
