@@ -26,3 +26,16 @@ yarn dev
 ```
 
 Navigate to [localhost:3000](https://localhost:3000) and follow the steps.
+
+## Potential future improvements
+
+- [] In the UP Profile metadata, add the following extra infos
+- location
+- public_metrics
+- created_at
+- entities?
+
+- [x] Find a way to download banner image (not available in twitter API free tier)
+      https://twittercommunity.com/t/how-to-get-banner-url-for-a-user/168692/7
+
+_Already searched and banner image only available with Basic paid plan._
