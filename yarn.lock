@@ -736,10 +736,10 @@
     "@openzeppelin/contracts-upgradeable" "^4.8.0"
     solidity-bytes-utils "0.8.0"
 
-"@lukso/web-components@^1.21.0":
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/@lukso/web-components/-/web-components-1.21.0.tgz#cb966de5aa7fd1e030239ccfea98c7c14010f0e7"
-  integrity sha512-oierc0/ybhGq6fFhEIQBIHUASDKzszlKNCavHhpCelZ3Qg4i1eFClbkiG5DDLmQO0fi6JmZeoW+gOyoIMN+QHg==
+"@lukso/web-components@^1.30.0":
+  version "1.30.0"
+  resolved "https://registry.yarnpkg.com/@lukso/web-components/-/web-components-1.30.0.tgz#1b3e0abfaef9307bbf95ed025a5e86a9cbbec468"
+  integrity sha512-GK4y+uhrm/YU98TG581uDekRUnYXEDVaKC9V+H++zhUVTjpgHNNi7ii6ATLVL/0nzZQaR5kfd1vQOTxByUrVtw==
   dependencies:
     ethereum-blockies-base64 "^1.0.2"
 
@@ -1970,7 +1970,7 @@ checkpoint-store@^1.1.0:
   dependencies:
     functional-red-black-tree "^1.0.1"
 
-chokidar@^3.5.3:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.npmjs.org/chokidar/-/chokidar-3.5.3.tgz"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -3597,6 +3597,11 @@ immediate@^3.2.3:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.3.0.tgz#1aef225517836bcdf7f2a2de2600c79ff0269266"
   integrity sha512-HR7EVodfFUdQCTIeySw+WDRFJlPcLOJbXfwwZ7Oom6tjsvZ3bOkCDJHehQC3nxJrv7+f9XecwazynjU8e4Vw3Q==
+
+immutable@^4.0.0:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.3.tgz#8934ff6826d996a7642c8dc4b46e694dd19561e3"
+  integrity sha512-808ZFYMsIRAjLAu5xkKo0TsbY9LBy9H5MazTKIEHerNkg0ymgilGfBPMR/3G7d/ihGmuK2Hw8S1izY2d3kd3wA==
 
 import-fresh@^3.2.1:
   version "3.3.0"
@@ -5613,6 +5618,15 @@ sass-graph@^4.0.1:
     scss-tokenizer "^0.4.3"
     yargs "^17.2.1"
 
+sass@^1.66.1:
+  version "1.66.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.66.1.tgz#04b51c4671e4650aa393740e66a4e58b44d055b1"
+  integrity sha512-50c+zTsZOJVgFfTgwwEzkjA3/QACgdNsKueWPyAR0mRINIvLAStVQBbPg14iuqEQ74NPDbXzJARJ/O4SI1zftA==
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
+    source-map-js ">=0.6.2 <2.0.0"
+
 scheduler@^0.23.0:
   version "0.23.0"
   resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.23.0.tgz"
@@ -5806,7 +5820,7 @@ solidity-bytes-utils@0.8.0:
   dependencies:
     "@truffle/hdwallet-provider" latest
 
-source-map-js@^1.0.2:
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.0.2.tgz"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==

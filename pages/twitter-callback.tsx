@@ -7,10 +7,6 @@ import UniversalProfile from "@lukso/lsp-smart-contracts/artifacts/UniversalProf
 import ERC725JS, { ERC725JSONSchema } from "@erc725/erc725.js";
 import { LSPFactory, ProfileDataBeforeUpload } from "@lukso/lsp-factory.js";
 
-if (process.browser) {
-  import("@lukso/web-components");
-}
-
 declare global {
   interface Window {
     ethereum?: any;
@@ -211,8 +207,7 @@ export default function TwitterCallback(props: any) {
             🐦 Fetch Twitter User Infos
           </button>
           <p className="mt-2">
-            Once your Twitter profile infos have been fetched, your will see them appearing in the JSON Metadata of your
-            LSP3Profile here ➡️
+            Once your Twitter profile info has been fetched, you will see it appearing in the <code>LSP3Profile</code> Metadata below ⬇️
           </p>
 
           <h2 className="mt-8 mb-4 text-2xl">Step 3 - Import your Twitter infos to your profile</h2>
@@ -220,7 +215,7 @@ export default function TwitterCallback(props: any) {
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
             onClick={() => updateLSP3ProfileMetadata()}
           >
-            📤 Upload Twitter infos to my UP
+            📤 Upload Twitter info to my UP
           </button>
         </div>
 

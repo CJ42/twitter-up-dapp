@@ -14,7 +14,7 @@
     "@erc725/erc725.js": "^0.17.2",
     "@lukso/lsp-factory.js": "^2.5.1",
     "@lukso/lsp-smart-contracts": "^0.10.0",
-    "@lukso/web-components": "^1.21.0",
+    "@lukso/web-components": "^1.30.0",
     "@mantine/core": "^6.0.10",
     "@mantine/hooks": "^6.0.10",
     "@mantine/next": "^6.0.10",
@@ -28,6 +28,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
+    "sass": "^1.66.1",
     "tailwindcss": "^3.0.1",
     "twitter-api-sdk": "^1.2.1"
   },
