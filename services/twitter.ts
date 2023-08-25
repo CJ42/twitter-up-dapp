@@ -7,7 +7,7 @@ export const createTwitterOAuthUser = () => {
   return new auth.OAuth2User({
     client_id: "ckxFaHlnX2FUdDdZMENVazBFMUk6MTpjaQ",
     client_secret: process.env.TWITTER_AUTH_CLIENT_SECRET,
-    callback: process.env.TWITTER_CALLBACK_URL,
+    callback: process.env.TWITTER_CALLBACK_URL || "",
     scopes: twitterAuthScopes,
   })
 }
