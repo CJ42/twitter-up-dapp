@@ -13,7 +13,7 @@ export default async (req: any, res: any) => {
     // TODO: check that we have received a token
     const twitterApi = new Client(authClient);
 
-    const result = await twitterApi.users.
+    const result = await twitterApi.users;
 
   try {
   } catch (error) {
