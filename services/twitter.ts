@@ -7,7 +7,7 @@ export const createTwitterOAuthUser = () => {
   return new auth.OAuth2User({
     client_id: "ckxFaHlnX2FUdDdZMENVazBFMUk6MTpjaQ",
     client_secret: process.env.TWITTER_AUTH_CLIENT_SECRET,
-    callback: "https://twitter-up-dapp.vercel.app/twitter-callback",
+    callback: process.env.TWITTER_CALLBACK_URL || "http://localhost:3000/api/twitter/callback",
     scopes: twitterAuthScopes,
   })
 }
