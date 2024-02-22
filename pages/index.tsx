@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 export default function Home() {
   return (
@@ -14,10 +14,35 @@ export default function Home() {
           Import your Twitter Profile on your UP.
         </h1>
 
-        <a href="/twitter" className="flex items-center p-8 mt-8 border rounded-md space-x-4 hover:bg-gray-100">
-          <p className="font-semibold text-lg">Let's get Started &rarr;</p>
-        </a>
-{/* 
+        {/* <a
+          href="/twitter"
+          className="flex items-center p-8 mt-8 border rounded-md space-x-4 hover:bg-gray-100"
+        > */}
+        {/* <p className="font-semibold text-lg">Let's get Started &rarr;</p> */}
+        <div className="p-8">
+          <lukso-button
+            variant="landing"
+            size="medium"
+            is-link=""
+            href="/twitter"
+            type="button"
+            target="_self"
+            rel="noopener noreferrer"
+            loading-text=""
+            custom-class=""
+            count=""
+          >
+            <lukso-icon
+              name="add-photo"
+              size="medium"
+              color="neutral-100"
+              class="mr-2"
+            ></lukso-icon>
+            Let's get started
+          </lukso-button>
+        </div>
+        {/* </a> */}
+        {/* 
         <div className="p-8 mt-8 border rounded-md space-y-4">
         <div>
             <p className="font-semibold text-lg">LSP3 Profile Metadata</p>
@@ -82,5 +107,5 @@ export default function Home() {
         </div> */}
       </main>
     </div>
-  )
+  );
 }

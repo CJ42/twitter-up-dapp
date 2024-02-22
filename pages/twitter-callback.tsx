@@ -15,16 +15,19 @@ declare global {
 
 // Twitter brings us back to this page after OAuth2 authorization
 export default function TwitterCallback(props: any) {
+  const [step, setStep] = useState(1);
+
   // Get the `code` from the url query params
   const router = useRouter();
   const { code } = router.query;
 
-  const [provider, setProvider] = useState<ethers.providers.Web3Provider>({} as ethers.providers.Web3Provider);
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider>(
+    {} as ethers.providers.Web3Provider
+  );
   const [universalProfileAddress, setUniversalProfileAddress] = useState("");
   const [lsp3ProfileDataIPFSURL, setLsp3ProfileDataIPFSURL] = useState("");
-  const [lsp3ProfileDataJSON, setLSP3ProfileDataJSON] = useState<ProfileDataBeforeUpload>(
-    {} as ProfileDataBeforeUpload
-  );
+  const [lsp3ProfileDataJSON, setLSP3ProfileDataJSON] =
+    useState<ProfileDataBeforeUpload>({} as ProfileDataBeforeUpload);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -34,7 +37,10 @@ export default function TwitterCallback(props: any) {
   }, []);
 
   const connectUniversalProfile = async () => {
-    const accountsRequest: string[] = await provider.send("eth_requestAccounts", []);
+    const accountsRequest: string[] = await provider.send(
+      "eth_requestAccounts",
+      []
+    );
     setUniversalProfileAddress(accountsRequest[0]);
 
     // debug
@@ -58,12 +64,17 @@ export default function TwitterCallback(props: any) {
 
         // debug
         console.log("🐦 Data received from Twitter API: ", data);
-        console.log("✅ Prepared the LSP3 Profile Metadata JSON: ", preparedData);
+        console.log(
+          "✅ Prepared the LSP3 Profile Metadata JSON: ",
+          preparedData
+        );
       });
   };
 
   // Prepare the LSP3Profile JSON template by filling up the fields
-  const prepareProfileDetails = async (twitterUserData: any): Promise<ProfileDataBeforeUpload> => {
+  const prepareProfileDetails = async (
+    twitterUserData: any
+  ): Promise<ProfileDataBeforeUpload> => {
     const twitterUsername = twitterUserData.username;
 
     // Upload images to ipfs using lsp-factory.js and add them in the list below
@@ -84,7 +95,9 @@ export default function TwitterCallback(props: any) {
         description: twitterUserData.description,
         profileImage: profileImage,
         tags: ["Twitter", "UniversalProfile", twitterUsername], // Add Twitter user handle as a tag
-        links: [{ title: "Twitter", url: "https://twitter.com/" + twitterUsername }],
+        links: [
+          { title: "Twitter", url: "https://twitter.com/" + twitterUsername },
+        ],
       });
 
       // e.g: ipfs://QmQytqrSB5JXygk2PGqFVpeVjduzS4ewQd3F9hd53XCmGZ
@@ -103,7 +116,9 @@ export default function TwitterCallback(props: any) {
 
       return jsonResponse;
     } catch (error) {
-      throw new Error(`Error while uploading profile metadata to IPFS: ${error}`);
+      throw new Error(
+        `Error while uploading profile metadata to IPFS: ${error}`
+      );
     }
   };
 
@@ -112,9 +127,11 @@ export default function TwitterCallback(props: any) {
    * using the UniversalProfile ABI and bytecode from the `@lukso/lsp-smart-contracts` package.
    */
   async function createUniversalProfileInstance() {
-    return new ethers.ContractFactory(UniversalProfile.abi, UniversalProfile.bytecode, provider.getSigner()).attach(
-      universalProfileAddress
-    );
+    return new ethers.ContractFactory(
+      UniversalProfile.abi,
+      UniversalProfile.bytecode,
+      provider.getSigner()
+    ).attach(universalProfileAddress);
   }
 
   // Schema of LSP3Profile Metadata key
@@ -135,16 +152,25 @@ export default function TwitterCallback(props: any) {
    */
   async function updateLSP3ProfileMetadata() {
     // Create an instance of ERC725.js, with the schema of LSP3Profile
-    const erc725js = new ERC725JS([LSP3ProfileSchema], universalProfileAddress, provider, {
-      ipfsGateway: "https://2eff.lukso.dev/ipfs/",
-    });
+    const erc725js = new ERC725JS(
+      [LSP3ProfileSchema],
+      universalProfileAddress,
+      provider,
+      {
+        ipfsGateway: "https://2eff.lukso.dev/ipfs/",
+      }
+    );
 
     const encodedData = await erc725js.encodeData([
       {
         keyName: LSP3ProfileSchema.name,
         value: {
-          hashFunction: "keccak256(utf8)",
-          hash: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(JSON.stringify(lsp3ProfileDataJSON))),
+          verification: {
+            method: "keccak256(utf8)",
+            data: ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(JSON.stringify(lsp3ProfileDataJSON))
+            ),
+          },
           url: lsp3ProfileDataIPFSURL,
         },
       },
@@ -155,10 +181,14 @@ export default function TwitterCallback(props: any) {
     console.log("🗄️ Successfully encoded with erc725.js: ", encodedData);
 
     // We are only updating one data key here
-    const tx = await profileInstance.setData(encodedData.keys[0], encodedData.values[0], {
-      gasLimit: 10_000_000,
-      from: universalProfileAddress,
-    });
+    const tx = await profileInstance.setData(
+      encodedData.keys[0],
+      encodedData.values[0],
+      {
+        gasLimit: 10_000_000,
+        from: universalProfileAddress,
+      }
+    );
 
     console.log("tx:", tx);
   }
@@ -173,73 +203,96 @@ export default function TwitterCallback(props: any) {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold">Successfully logged-in to Twitter!</h2>
+    <>
+      <div className="p-4 mt-12">
+        <lukso-wizard
+          // steps='[{"label":"Connect\nProfile"},{"label":"Load\nInfos"},{"label":"Update\nProfile"},{"label":"Success"}]'
+          active-step={step}
+          is-full-width="true"
+        ></lukso-wizard>
+      </div>
+      <div className="p-4">
+        <h2 className="text-2xl font-semibold">
+          Successfully logged-in to Twitter!
+        </h2>
 
-      <p className="mt-8 mb-8">Let's connect your UP now 😃</p>
+        <p className="mt-8 mb-8">Let's connect your UP now 😃</p>
 
-      <div className="grid grid-cols-2">
-        <div className="first-column">
-          <h2 className="mb-4 text-2xl">Step 1 - Connect your 🆙 to this dApp</h2>
+        <div className="grid grid-cols-2">
+          <div className="first-column">
+            <h2 className="mb-4 text-2xl">
+              Step 1 - Connect your 🆙 to this dApp
+            </h2>
 
-          <button
-            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full"
-            onClick={() => connectUniversalProfile()}
-          >
-            🔌 Connect my UP
-          </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full"
+              onClick={async () => {
+                await connectUniversalProfile();
+                setStep(2);
+              }}
+            >
+              🔌 Connect my UP
+            </button>
 
-          <p className="mt-2">
-            {universalProfileAddress ? (
-              <span className="text-sm text-gray-500">
-                ✅ Connected to UP at: <code>{universalProfileAddress}</code>
-              </span>
-            ) : (
-              <span className="text-sm text-gray-500">❌ Not connected to UP yet</span>
-            )}
-          </p>
+            <p className="mt-2">
+              {universalProfileAddress ? (
+                <span className="text-sm text-gray-500">
+                  ✅ Connected to UP at: <code>{universalProfileAddress}</code>
+                </span>
+              ) : (
+                <span className="text-sm text-gray-500">
+                  ❌ Not connected to UP yet
+                </span>
+              )}
+            </p>
 
-          <h2 className="mt-8 mb-4 text-2xl">Step 2 - Fetch your Twitter Profile infos</h2>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            onClick={() => getTwitterUserInfos()}
-          >
-            🐦 Fetch Twitter User Infos
-          </button>
-          <p className="mt-2">
-            Once your Twitter profile info has been fetched, you will see it appearing in the <code>LSP3Profile</code> Metadata below ⬇️
-          </p>
+            <h2 className="mt-8 mb-4 text-2xl">
+              Step 2 - Fetch your Twitter Profile infos
+            </h2>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              onClick={() => getTwitterUserInfos()}
+            >
+              🐦 Fetch Twitter User Infos
+            </button>
+            <p className="mt-2">
+              Once your Twitter profile info has been fetched, you will see it
+              appearing in the <code>LSP3Profile</code> Metadata below ⬇️
+            </p>
 
-          <h2 className="mt-8 mb-4 text-2xl">Step 3 - Import your Twitter infos to your profile</h2>
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
-            onClick={() => updateLSP3ProfileMetadata()}
-          >
-            📤 Upload Twitter info to my UP
-          </button>
-        </div>
+            <h2 className="mt-8 mb-4 text-2xl">
+              Step 3 - Import your Twitter infos to your profile
+            </h2>
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+              onClick={() => updateLSP3ProfileMetadata()}
+            >
+              📤 Upload Twitter info to my UP
+            </button>
+          </div>
 
-        <div className="second-column">
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-            onClick={() => clearProfileDetails()}
-          >
-            Clear UP profile details
-          </button>
-          {/* <button>
+          <div className="second-column">
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+              onClick={() => clearProfileDetails()}
+            >
+              Clear UP profile details
+            </button>
+            {/* <button>
             <a href="/">Go back home</a>
           </button> */}
+          </div>
+        </div>
+
+        <hr className="mt-8 mb-8" />
+
+        <h2 className="text-1sm italic">Generated LSP3Profile JSON Metadata</h2>
+        <div className="mt-8">
+          <Prism language="json" withLineNumbers scrollAreaComponent="div">
+            {JSON.stringify(lsp3ProfileDataJSON, null, 4)}
+          </Prism>
         </div>
       </div>
-
-      <hr className="mt-8 mb-8" />
-
-      <h2 className="text-1sm italic">Generated LSP3Profile JSON Metadata</h2>
-      <div className="mt-8">
-        <Prism language="json" withLineNumbers scrollAreaComponent="div">
-          {JSON.stringify(lsp3ProfileDataJSON, null, 4)}
-        </Prism>
-      </div>
-    </div>
+    </>
   );
 }

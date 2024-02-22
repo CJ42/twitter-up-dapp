@@ -1,9 +1,21 @@
-import '../styles/globals.css'
+import "../styles/globals.css";
 
-import { AppProps } from 'next/app';
+import { AppProps } from "next/app";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps}/>
+if (typeof window !== "undefined") {
+  // @ts-ignore
+  import("@lukso/web-components");
 }
 
-export default MyApp
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <>
+      <a href="/">
+        <lukso-navbar title="TWITTER UP DAPP"></lukso-navbar>
+      </a>
+      <Component {...pageProps} />
+    </>
+  );
+}
+
+export default MyApp;

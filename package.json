@@ -11,10 +11,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/server": "^11.11.0",
-    "@erc725/erc725.js": "^0.17.2",
+    "@erc725/erc725.js": "^0.23.0",
     "@lukso/lsp-factory.js": "^2.5.1",
-    "@lukso/lsp-smart-contracts": "^0.10.0",
-    "@lukso/web-components": "^1.30.0",
+    "@lukso/lsp-smart-contracts": "^0.14.0",
+    "@lukso/web-components": "^1.60.0",
     "@mantine/core": "^6.0.10",
     "@mantine/hooks": "^6.0.10",
     "@mantine/next": "^6.0.10",
