@@ -1,110 +1,184 @@
+import { useState } from "react";
 import Head from "next/head";
 
+import { loadContract, setLSP12IssuedAsset, claimPOAP } from "./api/actions";
+import { ethers } from "ethers";
+
 export default function Home() {
+  const [assetAddress, setAssetAddress] = useState<string>(
+    "0x43Ba7501F4EbB87B592EEC070ab0AB65347165E5"
+  );
+  const [universalProfileAddress, setUniversalProfileAddress] =
+    useState<string>("");
+
+  const [assetInfos, setAssetInfos] = useState({
+    name: "",
+    symbol: "",
+    description: "",
+    attributes: [],
+  });
+
+  const connectUniversalProfile = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const accountsRequest: string[] = await provider.send(
+      "eth_requestAccounts",
+      []
+    );
+    setUniversalProfileAddress(accountsRequest[0]);
+
+    // debug
+    console.log("Universal Profile's address: ", accountsRequest[0]);
+  };
+
   return (
     <div className="mt-4 max-w-xs p-4 md:max-w-md lg:max-w-2xl xl:max-w-4xl mx-auto">
+      <lukso-button
+        variant="secondary"
+        custom-class="text-purple-51 text-12 rounded-12 hover:text-purple-41"
+        loading-text="Connecting..."
+        onClick={async () => {
+          await connectUniversalProfile();
+        }}
+      >
+        CONNECT
+      </lukso-button>
       <Head>
-        <title>Import your Twitter Profile on your UP</title>
+        <title>LUKSO LSP8 POAP Workshop</title>
         <meta name="description" content="Next Twitter Starter" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="mt-10">
         <h1 className="text-3xl font-bold">
-          Import your Twitter Profile on your UP.
+          Create a LSP8 POAP and ask users to go on this website to claim it! 🎩
         </h1>
 
-        {/* <a
-          href="/twitter"
-          className="flex items-center p-8 mt-8 border rounded-md space-x-4 hover:bg-gray-100"
-        > */}
-        {/* <p className="font-semibold text-lg">Let's get Started &rarr;</p> */}
-        <div className="p-8">
+        {/* TODO: Show images of different POAPs and their image */}
+        <div className="pt-8">
+          <input
+            type="text"
+            className=" bg-neutral-100 paragraph-inter-14-regular p-4 m-2
+            border-solid placeholder:text-neutral-70
+            outline-none transition transition-all duration-150 appearance-none border-neutral-90 rounded-12 w-[450px] text-neutral-20 border "
+            value={assetAddress}
+            onChange={(e) => setAssetAddress(e.target.value)}
+          />
+        </div>
+        <div>
           <lukso-button
             variant="landing"
             size="medium"
-            is-link=""
-            href="/twitter"
+            is-link="false"
+            href="#"
             type="button"
             target="_self"
             rel="noopener noreferrer"
             loading-text=""
-            custom-class=""
+            custom-class="m-2"
+            onClick={async () => {
+              const results = await loadContract(assetAddress);
+
+              console.log("results: ", results);
+
+              if (results) {
+                setAssetInfos(results);
+              }
+            }}
+          >
+            Load contract
+          </lukso-button>
+          <lukso-button
+            variant="secondary"
+            size="medium"
+            is-link="true"
+            href={`https://erc725-inspect.lukso.tech/inspector?address=${assetAddress}&network=testnet`}
+            type="button"
+            target="_blank"
+            rel="noopener noreferrer"
+            custom-class="m-2"
             count=""
           >
-            <lukso-icon
-              name="add-photo"
-              size="medium"
-              color="neutral-100"
-              class="mr-2"
-            ></lukso-icon>
-            Let's get started
+            View on erc725-inspect
           </lukso-button>
         </div>
+
+        <div className="p-2"></div>
         {/* </a> */}
-        {/* 
-        <div className="p-8 mt-8 border rounded-md space-y-4">
-        <div>
-            <p className="font-semibold text-lg">LSP3 Profile Metadata</p>
-            <p>
-              This is what the JSON under your 
-              <code className="">LSP3Profile</code> 
-              metadata looks like now
-            </p>
-          </div>
-          <pre>
-            "some text"
-          </pre>
-        </div> */}
 
-        {/* <div className="p-8 mt-8 border rounded-md space-y-4">
+        <div className="p-8 border rounded-md space-y-4">
           <div>
-            <p className="font-semibold text-lg">Pages</p>
-            <p>
-              Get started by editing{' '}
-              <code className="">pages/index.js</code>
-            </p>
+            <p className="font-semibold text-lg">{assetInfos.name}</p>
+            <p>{assetInfos.description}.</p>
           </div>
+          <pre>{assetInfos.symbol}</pre>
+          <p className="font-semibold text-lg">Attributes</p>
+          <ul>
+            {assetInfos.attributes.map((attribute: any) => (
+              <li className="m-4">
+                <lukso-tag size="small">{attribute}</lukso-tag>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="p-8 border rounded-md space-y-4">
           <div>
-            <p className="font-semibold text-lg">API</p>
-            <p>
-              Get started with Twitter API by looking at{' '}
-              <code className="">pages/api/twitter-user.js</code>
-            </p>
+            <lukso-button
+              variant="landing"
+              size="medium"
+              is-link="false"
+              href="#"
+              type="button"
+              target="_self"
+              rel="noopener noreferrer"
+              loading-text=""
+              custom-class="my-2"
+              count=""
+              onClick={() => claimPOAP(assetAddress, universalProfileAddress)}
+            >
+              Claim POAP
+            </lukso-button>
+            <lukso-button
+              variant="secondary"
+              size="medium"
+              is-link=""
+              href="#"
+              type="button"
+              target="_self"
+              rel="noopener noreferrer"
+              loading-text="Registering..."
+              custom-class="my-2"
+              count=""
+              onClick={() => {
+                setLSP12IssuedAsset(assetAddress, universalProfileAddress);
+              }}
+            >
+              Register as Issued Asset
+            </lukso-button>
           </div>
-        </div> */}
+        </div>
 
-        {/* <div className="flex mt-8 flex-wrap gap-4">
-          <a href="https://nextjs.org/docs" className="flex-auto border rounded-md px-4 py-6 hover:bg-gray-100">
-            <h2 className="font-semibold text-lg">Next.js Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+        <h1 className="text-3xl font-bold m-4">Useful Resources 📚</h1>
 
-          <a href="https://github.com/draftbit/twitter-lite" className="flex-auto border rounded-md px-4 py-6 hover:bg-gray-100">
-            <h2 className="font-semibold text-lg">Twitter-lite Documentation &rarr;</h2>
-            <p>Find Twitter-lite documentation.</p>
-          </a>
-
-          <a href="https://tailwindcss.com/docs" className="flex-auto border rounded-md px-4 py-6 hover:bg-gray-100">
-            <h2 className="font-semibold text-lg">Tailwindcss Documentation &rarr;</h2>
-            <p>Find in-depth information about Tailwindcss features.</p>
-          </a>
-
-          <a href="https://developer.twitter.com/en/docs/twitter-api/v1" className="flex-auto border rounded-md px-4 py-6 hover:bg-gray-100">
-            <h2 className="font-semibold text-lg">Twitter API Documentation &rarr;</h2>
-            <p>Checkout Twitter API documentation.</p>
+        <div className="flex flex-wrap gap-4">
+          <a
+            href="https://docs.lukso.tech"
+            className="flex-6 border rounded-md px-4 py-6 hover:bg-gray-100"
+          >
+            <h2 className="font-semibold text-lg">docs.lukso.tech &rarr;</h2>
+            <p>Find in-depth information about LUKSO and the LSP Standards.</p>
           </a>
 
           <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="flex-auto border rounded-md px-4 py-6 hover:bg-gray-100"
+            href="https://github.com/CJ42/LSP8-EthDenver-2024-workshop"
+            className="flex-6 border rounded-md px-4 py-6 hover:bg-gray-100"
           >
-            <h2 className="font-semibold text-lg">Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
+            <h2 className="font-semibold text-lg">
+              Github repository of workshop &rarr;
+            </h2>
+            <p>Follow the instructions on this repository.</p>
           </a>
-        </div> */}
+        </div>
       </main>
     </div>
   );
